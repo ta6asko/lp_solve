@@ -1,0 +1,27 @@
+AllCops:
+  TargetRubyVersion: 2.7
+
+Documentation:
+  Enabled: false
+
+Lint/AmbiguousBlockAssociation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Style/SymbolArray:
+  Enabled: true
+  EnforcedStyle: brackets
+
+Metrics/ModuleLength:
+  Exclude:
+    - test/**/*.rb
+
+Metrics/ClassLength:
+  Exclude:
+    - test/**/*.rb
+
+Metrics/MethodLength:
+  Exclude:
+    - test/**/*.rb

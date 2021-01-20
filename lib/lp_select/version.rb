@@ -1,4 +1,5 @@
+# frozen_string_literal: true
+
 module LpSelect
-  # See http://semver.org/
-  VERSION = "1.0.0"
+  VERSION = '1.0.0'
 end

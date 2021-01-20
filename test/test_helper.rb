@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require 'lp_select'
 
@@ -6,4 +7,3 @@ require 'tempfile'
 
 class Test::Unit::TestCase
 end
-

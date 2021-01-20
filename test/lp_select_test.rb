@@ -1,23 +1,25 @@
+# frozen_string_literal: true
+
 require 'test_helper'
 
 class LpSelectTest < Test::Unit::TestCase
   def setup
     @fruits = {
-      "apple" => 1,
-      "bananna" => 0.3,
-      "pear" => 1.4,
-      "strawberry" => 3,
-      "pineapple" => 5,
-      "watermelon" => 4.3,
-      "grapes" => 2.4,
-      "orange" => 0.89,
-      "kiwi" => 3.49,
-      "mango" => 4.45,
-      "cherry" => 6,
-      "blueberry" => 5.50
+      'apple' => 1,
+      'bananna' => 0.3,
+      'pear' => 1.4,
+      'strawberry' => 3,
+      'pineapple' => 5,
+      'watermelon' => 4.3,
+      'grapes' => 2.4,
+      'orange' => 0.89,
+      'kiwi' => 3.49,
+      'mango' => 4.45,
+      'cherry' => 6,
+      'blueberry' => 5.50
     }
 
-    @lprec = LPSelect.new(:vars => @fruits.keys)
+    @lprec = LPSelect.new(vars: @fruits.keys)
   end
 
   def test_set_objective
@@ -32,20 +34,20 @@ class LpSelectTest < Test::Unit::TestCase
 
   def test_add_constraints
     # Alice likes berries, she gets at least one
-    @lprec.add_constraint({:name => "alice_picks", :vars => ["blueberry", "strawberry"], :op => LPSelect::GE, :target => 1})
-    assert_not_nil @lprec.constraints.detect{|x| x[:name] == 'alice_picks'}
+    @lprec.add_constraint({ name: 'alice_picks', vars: %w[blueberry strawberry], op: LPSelect::GE, target: 1 })
+    assert_not_nil @lprec.constraints.detect { |x| x[:name] == 'alice_picks' }
 
     # Bob likes tropical fruit, but he shouldn't get any more than two
-    @lprec.add_constraint({:name => "bob_picks", :vars => ["kiwi", "mango", "pineapple"], :op => LPSelect::LE, :target => 2})
-    assert_not_nil @lprec.constraints.detect{|x| x[:name] == 'bob_picks'}
+    @lprec.add_constraint({ name: 'bob_picks', vars: %w[kiwi mango pineapple], op: LPSelect::LE, target: 2 })
+    assert_not_nil @lprec.constraints.detect { |x| x[:name] == 'bob_picks' }
 
     # Carol is a toddler and gets to pick only two things.
-    @lprec.add_constraint({:name => "carol_picks", :vars => ["apple", "bananna", "grapes"], :op => LPSelect::EQ, :target => 2})
-    assert_not_nil @lprec.constraints.detect{|x| x[:name] == 'carol_picks'}
+    @lprec.add_constraint({ name: 'carol_picks', vars: %w[apple bananna grapes], op: LPSelect::EQ, target: 2 })
+    assert_not_nil @lprec.constraints.detect { |x| x[:name] == 'carol_picks' }
 
     # Dan is an omnivore and we like him enough that he should get at least three.
-    @lprec.add_constraint({:name => "don_picks", :vars => @fruits.keys, :op => LPSelect::GE, :target => 3})
-    assert_not_nil @lprec.constraints.detect{|x| x[:name] == 'don_picks'}
+    @lprec.add_constraint({ name: 'don_picks', vars: @fruits.keys, op: LPSelect::GE, target: 3 })
+    assert_not_nil @lprec.constraints.detect { |x| x[:name] == 'don_picks' }
 
     assert_equal 4, @lprec.constraints.count
   end
@@ -54,16 +56,16 @@ class LpSelectTest < Test::Unit::TestCase
     @lprec.set_objective(@fruits, :min) # min is the default
 
     # Alice likes berries, she gets at least one
-    @lprec.add_constraint({:name => "alice_picks", :vars => ["blueberry", "strawberry"], :op => LPSelect::GE, :target => 1})
+    @lprec.add_constraint({ name: 'alice_picks', vars: %w[blueberry strawberry], op: LPSelect::GE, target: 1 })
 
     # Bob likes tropical fruit, but he shouldn't get any more than two
-    @lprec.add_constraint({:name => "bob_picks", :vars => ["kiwi", "mango", "pineapple"], :op => LPSelect::LE, :target => 2})
+    @lprec.add_constraint({ name: 'bob_picks', vars: %w[kiwi mango pineapple], op: LPSelect::LE, target: 2 })
 
     # Carol is a toddler and gets to pick only two things.
-    @lprec.add_constraint({:name => "carol_picks", :vars => ["apple", "bananna", "grapes"], :op => LPSelect::EQ, :target => 2})
+    @lprec.add_constraint({ name: 'carol_picks', vars: %w[apple bananna grapes], op: LPSelect::EQ, target: 2 })
 
     # Dan is an omnivore and we like him enough that he should get at least three.
-    @lprec.add_constraint({:name => "don_picks", :vars => @fruits.keys, :op => LPSelect::GE, :target => 3})
+    @lprec.add_constraint({ name: 'don_picks', vars: @fruits.keys, op: LPSelect::GE, target: 3 })
 
     # etc...
 
@@ -73,7 +75,7 @@ class LpSelectTest < Test::Unit::TestCase
     end
     assert_not_nil yaml_source
 
-    alt = LPSelect.new(:yaml => yaml_source)
+    alt = LPSelect.new(yaml: yaml_source)
     assert_equal alt.objective_row, @lprec.objective_row
     assert_equal alt.vars, @lprec.vars
     assert_equal alt.constraints, @lprec.constraints
@@ -83,41 +85,40 @@ class LpSelectTest < Test::Unit::TestCase
     @lprec.set_objective(@fruits, :min) # min is the default
 
     # Alice likes berries, she gets at least one
-    @lprec.add_constraint({:name => "alice_picks", :vars => ["blueberry", "strawberry"], :op => LPSelect::GE, :target => 1})
+    @lprec.add_constraint({ name: 'alice_picks', vars: %w[blueberry strawberry], op: LPSelect::GE, target: 1 })
 
     # Bob likes tropical fruit, but he shouldn't get any more than two
-    @lprec.add_constraint({:name => "bob_picks", :vars => ["kiwi", "mango", "pineapple"], :op => LPSelect::LE, :target => 2})
+    @lprec.add_constraint({ name: 'bob_picks', vars: %w[kiwi mango pineapple], op: LPSelect::LE, target: 2 })
 
     # Carol is a toddler and gets to pick only two things.
-    @lprec.add_constraint({:name => "carol_picks", :vars => ["apple", "bananna", "grapes"], :op => LPSelect::EQ, :target => 2})
+    @lprec.add_constraint({ name: 'carol_picks', vars: %w[apple bananna grapes], op: LPSelect::EQ, target: 2 })
 
     # Dan is an omnivore and we like him enough that he should get at least three.
-    @lprec.add_constraint({:name => "don_picks", :vars => @fruits.keys, :op => LPSelect::GE, :target => 3})
+    @lprec.add_constraint({ name: 'don_picks', vars: @fruits.keys, op: LPSelect::GE, target: 3 })
 
     # etc...
     begin
-      destination = Tempfile.new("lp_select_test")
+      destination = Tempfile.new('lp_select_test')
       lp_source = nil
       assert_nothing_raised do
         lp_source = @lprec.to_lp_format
         @lprec.to_file(destination.path)
       end
 
-      assert_not_nil lp_source
+      assert_not_nil(lp_source)
 
-      @lprec.constraints.each do |c|
-        assert lp_source.include?(c[:name]), "Expected the source to include #{c[:name]}"
+      @lprec.constraints.each do |constraint|
+        assert(lp_source.include?(constraint[:name]), "Expected the source to include #{constraint[:name]}")
       end
 
-      @fruits.keys.each do |name|
+      @fruits.each_key do |name|
         assert lp_source.include?(name), "Expected the source to include #{name}"
       end
 
-      assert File.size(destination.path) > 0
+      assert File.size(destination.path).positive?
 
-      alt = LPSelect.new(:filename => destination.path)
+      alt = LPSelect.new(filename: destination.path)
       assert_equal alt.vars, @lprec.vars
-
     ensure
       destination.unlink
     end
@@ -127,16 +128,16 @@ class LpSelectTest < Test::Unit::TestCase
     @lprec.set_objective(@fruits, :min) # min is the default
 
     # Alice likes berries, she gets at least one, strawberry is expected since it is the cheapest
-    @lprec.add_constraint({:name => "alice_picks", :vars => ["blueberry", "strawberry"], :op => LPSelect::GE, :target => 1})
+    @lprec.add_constraint({ name: 'alice_picks', vars: %w[blueberry strawberry], op: LPSelect::GE, target: 1 })
 
     # Bob likes tropical fruit, but he shouldn't get any more than two.  Since we're minimizing we expect none of these
-    @lprec.add_constraint({:name => "bob_picks", :vars => ["kiwi", "mango", "pineapple"], :op => LPSelect::LE, :target => 2})
+    @lprec.add_constraint({ name: 'bob_picks', vars: %w[kiwi mango pineapple], op: LPSelect::LE, target: 2 })
 
     # Carol is a toddler and gets to pick only two things, the two cheapest
-    @lprec.add_constraint({:name => "carol_picks", :vars => ["apple", "bananna", "grapes"], :op => LPSelect::EQ, :target => 2})
+    @lprec.add_constraint({ name: 'carol_picks', vars: %w[apple bananna grapes], op: LPSelect::EQ, target: 2 })
 
     # Dan is an omnivore and we like him enough that he should get at least three, so three total picks
-    @lprec.add_constraint({:name => "don_picks", :vars => @fruits.keys, :op => LPSelect::GE, :target => 3})
+    @lprec.add_constraint({ name: 'don_picks', vars: @fruits.keys, op: LPSelect::GE, target: 3 })
 
     status = nil
     assert_nothing_raised do
@@ -147,7 +148,7 @@ class LpSelectTest < Test::Unit::TestCase
     assert_equal LPSolve::OPTIMAL, status
 
     assert_not_nil @lprec.results
-    selected_fruits = @lprec.results.collect{|k,v| v == 1.0 ? k : nil}.flatten.compact
+    selected_fruits = @lprec.results.collect { |k, v| v == 1 ? k : nil }.flatten.compact
     assert_equal 4.3, @lprec.objective
     assert_equal [:apple, :bananna, :strawberry], selected_fruits
   end
@@ -156,17 +157,19 @@ class LpSelectTest < Test::Unit::TestCase
     @lprec.set_objective(@fruits, :max)
 
     # Alice likes berries, she gets at least one.  Both should show up since we are maximizing
-    @lprec.add_constraint({:name => "alice_picks", :vars => ["blueberry", "strawberry"], :op => LPSelect::GE, :target => 1})
+    @lprec.add_constraint({ name: 'alice_picks', vars: %w[blueberry strawberry], op: LPSelect::GE, target: 1 })
 
-    # Bob likes tropical fruit, but he shouldn't get any more than two - mango and pineapple since they are the most expensive
-    @lprec.add_constraint({:name => "bob_picks", :vars => ["kiwi", "mango", "pineapple"], :op => LPSelect::LE, :target => 2})
+    # Bob likes tropical fruit, but he shouldn't get any more than two - mango and pineapple since they are the
+    # most expensive
+    @lprec.add_constraint({ name: 'bob_picks', vars: %w[kiwi mango pineapple], op: LPSelect::LE, target: 2 })
 
-    # Carol is a toddler and gets to pick only two things.  Apple and grapes since they are the most expensive, but no bananas
-    @lprec.add_constraint({:name => "carol_picks", :vars => ["apple", "bananna", "grapes"], :op => LPSelect::EQ, :target => 2})
+    # Carol is a toddler and gets to pick only two things.  Apple and grapes since they are the most expensive,
+    # but no bananas
+    @lprec.add_constraint({ name: 'carol_picks', vars: %w[apple bananna grapes], op: LPSelect::EQ, target: 2 })
 
     # Dan is an omnivore and we like him enough that he should get at least three. - so everythign else here
-    @lprec.add_constraint({:name => "don_picks", :vars => @fruits.keys, :op => LPSelect::GE, :target => 3})
-    
+    @lprec.add_constraint({ name: 'don_picks', vars: @fruits.keys, op: LPSelect::GE, target: 3 })
+
     expected_fruits = @fruits.keys.collect(&:to_sym) - [:bananna, :kiwi]
 
     status = nil
@@ -178,9 +181,8 @@ class LpSelectTest < Test::Unit::TestCase
     assert_equal LPSolve::OPTIMAL, status
 
     assert_not_nil @lprec.results
-    selected_fruits = @lprec.results.collect{|k,v| v == 1.0 ? k : nil}.flatten.compact
+    selected_fruits = @lprec.results.collect { |k, v| v == 1 ? k : nil }.flatten.compact
     assert_equal 33.94, @lprec.objective
     assert_equal expected_fruits.collect(&:to_s).sort, selected_fruits.collect(&:to_s).sort
   end
-
 end

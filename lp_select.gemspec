@@ -1,25 +1,26 @@
-# coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# frozen_string_literal: true
+
+$LOAD_PATH.push File.expand_path('lib', __dir__)
+
 require 'lp_select/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "lp_select"
-  spec.version       = LpSelect::VERSION
-  spec.authors       = ["Jake Sower", "James Prior"]
-  spec.email         = ["j.sower@asee.org", "j.prior@asee.org"]
-  spec.description   = %q{Ruby bindings for LPSolve}
-  spec.summary       = %q{Ruby bindings for LPSolve}
-  spec.homepage      = "https://github.com/asee/lp_select"
-  spec.license       = "LGPL"
+  spec.required_ruby_version = '>= 2.4.0'
+  spec.name                  = 'lp_select'
+  spec.version               = LpSelect::VERSION
+  spec.authors               = ['Oleg Prokhoda']
+  spec.email                 = ['ta6asko@gmail.com']
+  spec.description           = 'Ruby bindings for LPSolve'
+  spec.summary               = 'Ruby bindings for LPSolve'
+  spec.homepage              = 'https://github.com/asee/lp_select'
+  spec.license               = 'MIT'
+  spec.files                 = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
+  spec.executables           = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
+  spec.test_files            = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths         = ['lib']
 
-  spec.files         = `git ls-files`.split($/)
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
-  
-  spec.add_dependency "ffi"
+  spec.add_dependency 'ffi'
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency 'bundler'
+  spec.add_development_dependency 'rake'
 end
